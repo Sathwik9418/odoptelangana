@@ -1,18 +1,11 @@
-// Base URL for API
-const BASE_URL = 'https://odopsample.vercel.app/forum.html/api'; // Replace with your actual Vercel URL
-
 // Function to load posts from the server and display them
 const loadPosts = async () => {
-    try {
-        const response = await fetch(`${BASE_URL}/posts`); // Fetch all posts from the server
-        if (response.ok) {
-            const posts = await response.json();
-            displayPosts(posts); // Display all fetched posts
-        } else {
-            console.error('Error loading posts:', response.statusText);
-        }
-    } catch (error) {
-        console.error('Network error while loading posts:', error);
+    const response = await fetch('/api/posts'); // Fetch all posts from the server
+    if (response.ok) {
+        const posts = await response.json();
+        displayPosts(posts); // Display all fetched posts
+    } else {
+        console.error('Error loading posts');
     }
 };
 
@@ -41,26 +34,22 @@ document.getElementById('postForm').addEventListener('submit', async (event) => 
     const title = document.getElementById('title').value;
     const content = document.getElementById('content').value;
 
-    try {
-        const response = await fetch(`${BASE_URL}/posts`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ title, content }),
-        });
+    const response = await fetch('/api/posts', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ title, content }),
+    });
 
-        if (response.ok) {
-            const newPost = await response.json();
-            const postsDiv = document.getElementById('posts');
-            const newPostElement = createPostElement(newPost);
-            postsDiv.insertBefore(newPostElement, postsDiv.firstChild); // Prepend the new post
-            document.getElementById('postForm').reset();
-        } else {
-            console.error('Error adding post:', response.statusText);
-        }
-    } catch (error) {
-        console.error('Network error while adding post:', error);
+    if (response.ok) {
+        const newPost = await response.json();
+        const postsDiv = document.getElementById('posts');
+        const newPostElement = createPostElement(newPost);
+        postsDiv.insertBefore(newPostElement, postsDiv.firstChild); // Prepend the new post
+        document.getElementById('postForm').reset();
+    } else {
+        console.error('Error adding post');
     }
 });
 
