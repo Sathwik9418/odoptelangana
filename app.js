@@ -3,13 +3,9 @@ const mongoose = require('mongoose');
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
-
 const cors = require('cors');
 
-
-
 const app = express();
-const port = process.env.PORT || 3000;
 
 // Middleware
 app.use(cors());
@@ -44,7 +40,7 @@ app.get('/', (req, res) => {
 });
 
 // Route to create a new post
-app.post('/forum.html/api/posts', async (req, res) => {
+app.post('/api/posts', async (req, res) => {
     const { title, content } = req.body;
     try {
         const newPost = new Post({ title, content });
@@ -56,7 +52,7 @@ app.post('/forum.html/api/posts', async (req, res) => {
 });
 
 // Route to get all posts
-app.get('/forum.html/api/posts', async (req, res) => {
+app.get('/api/posts', async (req, res) => {
     try {
         const posts = await Post.find(); // Fetch all posts from MongoDB
         res.status(200).json(posts); // Send posts as JSON response
@@ -65,8 +61,5 @@ app.get('/forum.html/api/posts', async (req, res) => {
     }
 });
 
-// Start the server
-app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
-});
-
+// Export the app for serverless deployment
+module.exports = app;
