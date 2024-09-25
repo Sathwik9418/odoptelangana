@@ -1,5 +1,6 @@
-const express = require('express');
+require('dotenv').config();
 const mongoose = require('mongoose');
+const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 
@@ -12,7 +13,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // MongoDB connection string
-const connectionString = 'mongodb+srv://esathwikkumar:hp6VwMluheTBu7Vv@cluster-s.mcbjj.mongodb.net/appdbs?retryWrites=true&w=majority&appName=Cluster-S';
+const connectionString = process.env.MONGODB_URI;
+
 mongoose.connect(connectionString, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
