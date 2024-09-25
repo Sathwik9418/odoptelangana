@@ -1,6 +1,6 @@
 // Function to load posts from the server and display them
 const loadPosts = async () => {
-    const response = await fetch('https://odopsample.vercel.app/api/posts'); // Fetch all posts from the server
+    const response = await fetch('/api/posts'); // Fetch all posts from the server
     if (response.ok) {
         const posts = await response.json();
         displayPosts(posts); // Display all fetched posts
@@ -34,7 +34,7 @@ document.getElementById('postForm').addEventListener('submit', async (event) => 
     const title = document.getElementById('title').value;
     const content = document.getElementById('content').value;
 
-    const response = await fetch('https://odopsample.vercel.app/api/posts', {
+    const response = await fetch('/api/posts', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
