@@ -1,5 +1,5 @@
 // Base URL for API
-const BASE_URL = 'https://odopsample.vercel.app/api'; // Replace with your actual Vercel URL
+const BASE_URL = 'https://odopsample.vercel.app/forum.html/api'; // Replace with your actual Vercel URL
 
 // Function to load posts from the server and display them
 const loadPosts = async () => {

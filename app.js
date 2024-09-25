@@ -44,7 +44,7 @@ app.get('/', (req, res) => {
 });
 
 // Route to create a new post
-app.post('/api/posts', async (req, res) => {
+app.post('/forum.html/api/posts', async (req, res) => {
     const { title, content } = req.body;
     try {
         const newPost = new Post({ title, content });
@@ -56,7 +56,7 @@ app.post('/api/posts', async (req, res) => {
 });
 
 // Route to get all posts
-app.get('/api/posts', async (req, res) => {
+app.get('/forum.html/api/posts', async (req, res) => {
     try {
         const posts = await Post.find(); // Fetch all posts from MongoDB
         res.status(200).json(posts); // Send posts as JSON response
