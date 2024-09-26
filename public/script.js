@@ -1,57 +1,74 @@
-// Function to load posts from the server and display them
 const loadPosts = async () => {
-    const response = await fetch('/api/posts'); // Fetch all posts from the server
-    if (response.ok) {
+    try {
+        const response = await fetch('./api/posts');
+        if (!response.ok) {
+            throw new Error(`Error loading posts: ${response.status} ${response.statusText}`);
+        }
         const posts = await response.json();
-        displayPosts(posts); // Display all fetched posts
-    } else {
-        console.error('Error loading posts');
+        displayPosts(posts);
+    } catch (error) {
+        console.error('Error loading posts:', error);
     }
 };
 
-// Function to display posts (single or multiple)
+const createPostElement = (post) => {
+    const postElement = document.createElement('div');
+    postElement.className = 'post'; // You can add a class for styling
+
+    const titleElement = document.createElement('h3');
+    titleElement.textContent = post.title;
+
+    const contentElement = document.createElement('p');
+    contentElement.textContent = post.content;
+
+    const dateElement = document.createElement('small');
+    dateElement.textContent = new Date(post.createdAt).toLocaleString();
+
+    postElement.appendChild(titleElement);
+    postElement.appendChild(contentElement);
+    postElement.appendChild(dateElement);
+
+    return postElement;
+};
+
 const displayPosts = (posts) => {
     const postsDiv = document.getElementById('posts');
-    postsDiv.innerHTML = ''; // Clear the existing posts
+    postsDiv.innerHTML = ''; // Clear existing posts
+
     posts.forEach(post => {
-        const postDiv = createPostElement(post);
-        postsDiv.appendChild(postDiv); // Append each post to the postsDiv
+        const postElement = createPostElement(post);
+        postsDiv.appendChild(postElement);
     });
 };
 
-// Function to create a post element
-const createPostElement = (post) => {
-    const postDiv = document.createElement('div');
-    postDiv.classList.add('post');
-    postDiv.innerHTML = `<h3>${post.title}</h3><p>${post.content}</p><small>${new Date(post.createdAt).toLocaleString()}</small>`;
-    return postDiv;
-};
-
-// Event listener for the post form submission
 document.getElementById('postForm').addEventListener('submit', async (event) => {
     event.preventDefault();
 
     const title = document.getElementById('title').value;
     const content = document.getElementById('content').value;
 
-    const response = await fetch('/api/posts', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ title, content }),
-    });
+    try {
+        const response = await fetch('./api/posts', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ title, content }),
+        });
 
-    if (response.ok) {
+        if (!response.ok) {
+            throw new Error(`Error adding post: ${response.status} ${response.statusText}`);
+        }
+
         const newPost = await response.json();
         const postsDiv = document.getElementById('posts');
         const newPostElement = createPostElement(newPost);
-        postsDiv.insertBefore(newPostElement, postsDiv.firstChild); // Prepend the new post
+        postsDiv.insertBefore(newPostElement, postsDiv.firstChild);
         document.getElementById('postForm').reset();
-    } else {
-        console.error('Error adding post');
+    } catch (error) {
+        console.error('Error adding post:', error);
     }
 });
 
-// Load posts when the page is loaded
-document.addEventListener('DOMContentLoaded', loadPosts);
+// Call loadPosts to fetch and display posts on page load
+loadPosts();

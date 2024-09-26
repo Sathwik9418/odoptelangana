@@ -6,9 +6,14 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 
 const app = express();
+const port = process.env.PORT || 3000;
 
 // Middleware
-app.use(cors());
+app.use(cors({
+    origin: '*',
+    methods: ['GET', 'POST'],
+    allowedHeaders: ['Content-Type'],
+}));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
@@ -54,12 +59,14 @@ app.post('/api/posts', async (req, res) => {
 // Route to get all posts
 app.get('/api/posts', async (req, res) => {
     try {
-        const posts = await Post.find(); // Fetch all posts from MongoDB
-        res.status(200).json(posts); // Send posts as JSON response
+        const posts = await Post.find();
+        res.status(200).json(posts);
     } catch (error) {
-        res.status(500).send(error); // Handle error
+        res.status(500).send(error);
     }
 });
 
-// Export the app for serverless deployment
-module.exports = app;
+// Start the server
+app.listen(port, () => {
+    console.log(`Server is running on http://localhost:${port}`);
+});
